@@ -13,7 +13,7 @@ class Checkout
   def scan(item)
     product = @products.find { |p| p['sku'] == item }
     return  unless product # Skipping invalid items
-    promo = @promo_rules.find { |rule| rule.sku == product['sku'] }
+    promo = @promo_rules.find { |rule| rule.valid? product }
     promo ? promo.add_item(product) : @normal_price_rule.add_item(product)
   end
 
