@@ -3,7 +3,7 @@ require_relative 'normal_price_rule'
 
 # Main checkout class
 class Checkout
-  def initialize(promo_rules)
+  def initialize(*promo_rules)
     # Read product price info.
     @products = JSON.parse(File.read(Dir.pwd + '/products.json'))
     @promo_rules = promo_rules

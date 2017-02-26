@@ -23,8 +23,7 @@ class TestCheckout < MiniTest::Test
   end
 
   def test_incremental
-    rules = [PriceDiscountPromo.new('A', 3, 130), PriceDiscountPromo.new('B', 2, 45)]
-    co = Checkout.new(rules)
+    co = Checkout.new(PriceDiscountPromo.new('A', 3, 130), PriceDiscountPromo.new('B', 2, 45))
     assert_equal(0, co.total)
     co.scan('A')
     assert_equal(50, co.total)
@@ -39,8 +38,7 @@ class TestCheckout < MiniTest::Test
   end
 
   def price(goods)
-    rules = [PriceDiscountPromo.new('A', 3, 130), PriceDiscountPromo.new('B', 2, 45)] 
-    co = Checkout.new(rules)
+    co = Checkout.new(PriceDiscountPromo.new('A', 3, 130), PriceDiscountPromo.new('B', 2, 45)) 
     goods.split(//).each { |item| co.scan(item) }
     co.total
   end
