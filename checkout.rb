@@ -1,27 +1,23 @@
 require 'json'
+require_relative 'normal_price_rule'
 
+# Main checkout class
 class Checkout
-
   def initialize(promo_rules)
+    # Read product price info.
     @products = JSON.parse(File.read(Dir.pwd + '/products.json'))
     @promo_rules = promo_rules
-    @non_promo_items = []
+    @normal_price_rule = NormalPriceRule.new
   end
 
   def scan(item)
-    product = @products.find{|product| product['sku'] == item }
-    raise "Invalid Item" unless product
-    promo = @promo_rules.find{|rule| rule.sku == item}
-    if promo
-      promo.add_item product
-    else
-      @non_promo_items << product
-    end    
+    product = @products.find { |p| p['sku'] == item }
+    return  unless product # Skipping invalid items
+    promo = @promo_rules.find { |rule| rule.sku == product['sku'] }
+    promo ? promo.add_item(product) : @normal_price_rule.add_item(product)
   end
 
   def total
-    promo_price = @promo_rules.inject(0){|sum, promo| sum  + promo.total }
-    promo_price + @non_promo_items.inject(0){|sum, item| sum + item['price']}
+    @promo_rules.inject(0) { |sum, promo| sum + promo.total } + @normal_price_rule.total
   end
- 
 end

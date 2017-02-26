@@ -1,6 +1,7 @@
+# This class is responsible for calculating the total
+# for products with price discount promotion.
 class PriceDiscountPromo
-
-  attr_accessor :sku	
+  attr_accessor :sku
 
   def initialize(sku, quantity, promo_price)
     @sku = sku
@@ -9,12 +10,13 @@ class PriceDiscountPromo
     @items = []
   end
 
-  def add_item item
-  	@items << item
-  end 	
-  
+  def add_item(item)
+    @items << item
+  end
+
   def total
-  	(@items.length / @quantity * @promo_price) + ((@items.length % @quantity) * @items.first['price'])
-  end  
-  
+    return 0 if @items.empty?
+    item_count = @items.length
+    (item_count / @quantity * @promo_price) + ((item_count % @quantity) * @items.first['price'].to_f)
+  end
 end
